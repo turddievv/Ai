@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Интернет вещей: города, дома, заводы</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700&family=Manrope:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#06101f;--bg2:#0b1b33;--card:#0e2240;--ink:#e8f1ff;--mute:#8ea6c8;--line:#1c3a63;--sig:#2de2e6;--amb:#ffb938;--grn:#5cf29a;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f3f8ff;--bg2:#e3eefc;--card:#fff;--ink:#0a1b33;--mute:#4b6485;--line:#c5d8f0;--sig:#007f9c;--amb:#b86e00;--grn:#08873f}}
+:root[data-theme="light"]{--bg:#f3f8ff;--bg2:#e3eefc;--card:#fff;--ink:#0a1b33;--mute:#4b6485;--line:#c5d8f0;--sig:#007f9c;--amb:#b86e00;--grn:#08873f}
+:root[data-theme="dark"]{--bg:#06101f;--bg2:#0b1b33;--card:#0e2240;--ink:#e8f1ff;--mute:#8ea6c8;--line:#1c3a63;--sig:#2de2e6;--amb:#ffb938;--grn:#5cf29a}
+html{scroll-behavior:smooth;scroll-padding-top:70px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 17px/1.65 Manrope,system-ui,sans-serif;overflow-x:hidden}
+h1,h2,h3{font-family:Unbounded,Manrope,sans-serif;line-height:1.15;margin:0}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--sig);outline-offset:3px}
+.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;backdrop-filter:blur(14px);background:color-mix(in srgb,var(--bg) 78%,transparent);border-bottom:1px solid var(--line)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:16px}
+.logo{font:700 15px Unbounded;text-decoration:none;display:flex;gap:10px;align-items:center}
+.logo i{width:12px;height:12px;border-radius:50%;background:var(--sig);box-shadow:0 0 0 0 var(--sig);animation:ping 2.2s infinite}
+@keyframes ping{70%{box-shadow:0 0 0 12px transparent}100%{box-shadow:0 0 0 0 transparent}}
+nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:14px;color:var(--mute)}
+nav ul a{text-decoration:none}nav ul a:hover{color:var(--ink)}
+@media(max-width:760px){nav ul{display:none}}
+/* hero */
+.hero{position:relative;min-height:calc(100vh - 60px);display:grid;align-items:center;overflow:hidden}
+#net{position:absolute;inset:0;width:100%;height:100%}
+.hero .wrap{position:relative;padding-top:60px;padding-bottom:60px}
+.hero h1{font-size:clamp(34px,6.4vw,76px);font-weight:700;max-width:14ch;animation:rise 1s cubic-bezier(.2,.8,.2,1) both}
+.hero h1 span{background:linear-gradient(90deg,var(--sig),var(--grn));-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero p{max-width:52ch;color:var(--mute);font-size:19px;margin:26px 0 34px;animation:rise 1s .15s cubic-bezier(.2,.8,.2,1) both}
+.cta{display:flex;gap:14px;flex-wrap:wrap;animation:rise 1s .3s cubic-bezier(.2,.8,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}}
+.btn{display:inline-block;padding:14px 26px;border-radius:999px;font-weight:700;text-decoration:none;font-size:15px;border:1px solid var(--line);transition:.25s}
+.btn.p{background:var(--sig);color:#04121f;border-color:var(--sig)}
+.btn.p:hover{transform:translateY(-3px);box-shadow:0 10px 30px color-mix(in srgb,var(--sig) 45%,transparent)}
+.btn:not(.p):hover{border-color:var(--sig)}
+section{padding:96px 0}
+section.alt{background:var(--bg2)}
+h2{font-size:clamp(26px,4vw,44px);max-width:20ch;margin-bottom:18px}
+.lead{color:var(--mute);max-width:62ch;margin:0 0 48px}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden}
+.stat{background:var(--card);padding:30px 26px}
+.stat b{display:block;font:700 clamp(30px,4vw,46px) Unbounded;color:var(--sig)}
+.stat span{color:var(--mute);font-size:15px}
+/* tabs */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:28px}
+.tab{font:700 15px Manrope;padding:12px 22px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--mute);cursor:pointer;transition:.25s}
+.tab[aria-selected="true"]{background:var(--sig);border-color:var(--sig);color:#04121f}
+.panel{display:none;grid-template-columns:1.1fr 1fr;gap:34px;align-items:stretch}
+.panel.on{display:grid;animation:fade .5s both}
+@keyframes fade{from{opacity:0;transform:translateX(18px)}}
+@media(max-width:860px){.panel.on{grid-template-columns:1fr}}
+.panel h3{font-size:26px;margin-bottom:14px}
+.panel p{color:var(--mute);margin:0 0 16px}
+.panel ul{padding:0;margin:20px 0 0;list-style:none;display:grid;gap:12px}
+.panel li{padding-left:28px;position:relative}
+.panel li:before{content:"";position:absolute;left:0;top:.62em;width:14px;height:2px;background:var(--sig)}
+.vis{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:22px;min-height:300px;display:flex;flex-direction:column;justify-content:center;gap:14px}
+.vis svg{width:100%;height:auto}
+.kpi{display:flex;justify-content:space-between;border-bottom:1px solid var(--line);padding:10px 0;font-size:15px}
+.kpi b{color:var(--grn);font-family:Unbounded;font-weight:500}
+/* flow */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;counter-reset:s;position:relative}
+.flow:before{content:"";position:absolute;left:6%;right:6%;top:26px;height:2px;background:linear-gradient(90deg,var(--sig),var(--amb));opacity:.5}
+.step{position:relative;padding-top:64px}
+.step:before{counter-increment:s;content:counter(s);position:absolute;top:0;left:0;width:54px;height:54px;border-radius:50%;background:var(--bg2);border:2px solid var(--sig);display:grid;place-items:center;font:700 18px Unbounded;color:var(--sig)}
+.step.on:before{background:var(--sig);color:#04121f;transition:.5s}
+.step h3{font-size:18px;margin-bottom:8px}.step p{margin:0;color:var(--mute);font-size:15px}
+@media(max-width:860px){.flow{grid-template-columns:1fr 1fr}.flow:before{display:none}}
+@media(max-width:520px){.flow{grid-template-columns:1fr}}
+/* home demo */
+.home{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}
+@media(max-width:860px){.home{grid-template-columns:1fr}}
+.devs{display:grid;gap:12px}
+.dev{display:flex;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px 20px;cursor:pointer;width:100%;color:var(--ink);font:500 16px Manrope;text-align:left;transition:.25s}
+.dev:hover{border-color:var(--sig)}
+.dev small{display:block;color:var(--mute);font-size:13px}
+.sw{width:46px;height:26px;border-radius:99px;background:var(--line);position:relative;transition:.3s;flex:none}
+.sw:after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;transition:.3s}
+.dev[aria-pressed="true"] .sw{background:var(--grn)}
+.dev[aria-pressed="true"] .sw:after{left:23px}
+.meter{display:flex;justify-content:space-between;font-size:15px;color:var(--mute);padding:6px 4px}.meter b{color:var(--amb);font-family:Unbounded;font-weight:500}
+#house .glow{opacity:0;transition:.5s}#house .glow.on{opacity:1}
+/* cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;transition:.3s}
+.card:hover{transform:translateY(-6px);border-color:var(--sig)}
+.card h3{font-size:18px;margin-bottom:10px}.card p{margin:0;color:var(--mute);font-size:15px}
+.tag{display:inline-block;color:var(--amb);font-size:13px;font-weight:700;margin-bottom:12px}
+/* quiz */
+.qz{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:34px;max-width:760px;margin:0 auto;position:relative;overflow:hidden;min-height:360px}
+.qz>div{animation:fade .45s both}
+.qz h3{font-size:22px;margin-bottom:18px}
+.fld{display:grid;gap:12px;margin-bottom:22px}
+.fld input{width:100%;padding:15px 18px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 16px Manrope}
+.fld input:focus{border-color:var(--sig);outline:none}
+.tests{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.tst{display:flex;gap:12px;align-items:center;padding:16px;border-radius:16px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:700 15px Manrope;cursor:pointer;text-align:left;transition:.25s}
+.tst:hover{border-color:var(--sig);transform:translateY(-3px)}
+.tst em{font-style:normal;font-size:30px}
+.err{color:#ff6b6b;font-size:14px;min-height:22px;margin:0 0 10px}
+.bar{height:8px;border-radius:9px;background:var(--line);margin-bottom:24px;overflow:hidden}
+.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--sig),var(--grn));transition:width .5s}
+.opt{display:block;width:100%;text-align:left;margin-bottom:10px;padding:15px 18px;border-radius:14px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:500 16px Manrope;cursor:pointer;transition:.2s}
+.opt:hover:not(:disabled){border-color:var(--sig)}
+.opt.ok{background:color-mix(in srgb,var(--grn) 22%,var(--bg));border-color:var(--grn);animation:pop .4s}
+.opt.bad{background:color-mix(in srgb,#ff5a5a 22%,var(--bg));border-color:#ff5a5a;animation:shake .4s}
+@keyframes pop{50%{transform:scale(1.03)}}
+@keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.res{text-align:center}
+.big{font-size:84px;line-height:1;display:inline-block;animation:boing 1.4s cubic-bezier(.3,1.6,.5,1) both,wob 3s 1.4s ease-in-out infinite}
+@keyframes boing{0%{transform:scale(0) rotate(-40deg)}70%{transform:scale(1.25) rotate(12deg)}100%{transform:scale(1) rotate(0)}}
+@keyframes wob{50%{transform:rotate(8deg) scale(1.06)}}
+.ring{width:150px;height:150px;margin:14px auto;position:relative}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:10;stroke-linecap:round}
+.ring .t{stroke:var(--line)}.ring .v{stroke:var(--sig);stroke-dasharray:339.3;stroke-dashoffset:339.3;transition:stroke-dashoffset 1.6s .3s cubic-bezier(.2,.8,.2,1)}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font:700 32px Unbounded}
+.who{font:700 22px Unbounded;margin:6px 0 2px}.grp{color:var(--mute);margin:0 0 6px}
+.fl{position:absolute;bottom:-30px;font-size:28px;pointer-events:none;animation:up 3s ease-out forwards}
+@keyframes up{to{transform:translateY(-440px) rotate(30deg);opacity:0}}
+.row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+button.btn{cursor:pointer;background:transparent;color:var(--ink);font-family:Manrope}
+button.btn.p{background:var(--sig);color:#04121f}
+footer{padding:60px 0;border-top:1px solid var(--line);color:var(--mute);font-size:14px}
+footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s}.rv.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv{opacity:1;transform:none}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<nav><div class="wrap"><a class="logo" href="#top"><i></i>IoT Мир</a>
+<ul><li><a href="#about">Что это</a></li><li><a href="#areas">Направления</a></li><li><a href="#how">Как работает</a></li><li><a href="#home">Умный дом</a></li><li><a href="#risks">Вызовы</a></li><li><a href="#quiz">Тест</a></li></ul></div></nav>
+
+<header class="hero" id="top">
+<canvas id="net" aria-hidden="true"></canvas>
+<div class="wrap">
+<h1>Мир, в котором вещи <span>говорят друг с другом</span></h1>
+<p>Интернет вещей объединяет датчики, устройства и облако в одну систему. Он делает города чище, дома комфортнее, а заводы эффективнее.</p>
+<div class="cta"><a class="btn p" href="#areas">Изучить направления</a><a class="btn" href="#home">Попробовать умный дом</a></div>
+</div>
+</header>
+
+<section id="about"><div class="wrap">
+<h2 class="rv">Что такое интернет вещей</h2>
+<p class="lead rv">IoT (Internet of Things) — сеть физических объектов со встроенными датчиками, процессорами и связью. Они собирают данные, передают их по сети и получают команды без участия человека.</p>
+<div class="stats rv">
+<div class="stat"><b data-n="19" data-s=" млрд">0</b><span>подключённых устройств в мире (оценка 2024 года)</span></div>
+<div class="stat"><b data-n="40" data-s="%">0</b><span>средний рост экономии энергии в умных зданиях</span></div>
+<div class="stat"><b data-n="25" data-s="%">0</b><span>снижение простоев оборудования на заводах</span></div>
+<div class="stat"><b data-n="68" data-s="%">0</b><span>населения мира будет жить в городах к 2050 году</span></div>
+</div>
+<p class="rv" style="color:var(--mute);font-size:13px;margin-top:14px">Цифры округлены и взяты из отраслевых обзоров. Реальные результаты зависят от проекта.</p>
+</div></section>
+
+<section id="areas" class="alt"><div class="wrap">
+<h2 class="rv">Три направления, одна технология</h2>
+<p class="lead rv">Выберите сферу и посмотрите, как IoT решает в ней конкретные задачи.</p>
+<div class="tabs" role="tablist">
+<button class="tab" role="tab" aria-selected="true" data-t="0">Умные города</button>
+<button class="tab" role="tab" aria-selected="false" data-t="1">Умные дома</button>
+<button class="tab" role="tab" aria-selected="false" data-t="2">Промышленный IoT</button></div>
+
+<div class="panel on" role="tabpanel">
+<div><h3>Город, который управляет потоками</h3><p>Датчики на дорогах, в урнах, фонарях и трубах передают данные в единый диспетчерский центр. Город реагирует на ситуацию сразу, а не после жалоб жителей.</p>
+<ul><li>Адаптивные светофоры сокращают пробки и время в пути.</li><li>Умное освещение включается по движению и экономит до 60% электроэнергии.</li><li>Датчики утечек находят аварии на водопроводе до прорыва.</li><li>Мониторинг воздуха и шума показывает загрязнение по районам.</li></ul></div>
+<div class="vis"><svg viewBox="0 0 320 190" aria-label="Схема городской сети"><g fill="none" stroke="var(--line)" stroke-width="2"><path d="M0 130H320M0 160H320M60 100V190M200 100V190"/></g>
+<g fill="var(--card)" stroke="var(--sig)" stroke-width="2"><rect x="20" y="50" width="34" height="80"/><rect x="70" y="20" width="40" height="110"/><rect x="125" y="60" width="30" height="70"/><rect x="215" y="35" width="38" height="95"/><rect x="265" y="70" width="32" height="60"/></g>
+<g fill="var(--amb)"><circle cx="90" cy="14" r="5"><animate attributeName="r" values="4;9;4" dur="2s" repeatCount="indefinite"/></circle><circle cx="234" cy="28" r="5"><animate attributeName="r" values="4;9;4" dur="2.4s" repeatCount="indefinite"/></circle><circle cx="140" cy="54" r="5"><animate attributeName="r" values="4;9;4" dur="1.8s" repeatCount="indefinite"/></circle></g>
+<circle r="5" fill="var(--grn)"><animateMotion dur="5s" repeatCount="indefinite" path="M0 145H320"/></circle><circle r="5" fill="var(--sig)"><animateMotion dur="7s" repeatCount="indefinite" path="M320 145H0"/></circle></svg>
+<div class="kpi"><span>Время в пути</span><b>−20%</b></div><div class="kpi"><span>Затраты на освещение</span><b>−50%</b></div></div></div>
+
+<div class="panel" role="tabpanel">
+<div><h3>Дом, который подстраивается под вас</h3><p>Умные устройства связаны единым хабом и работают по сценариям. Вы задаёте правила один раз, дальше дом действует сам.</p>
+<ul><li>Термостаты учат ваш график и греют только когда нужно.</li><li>Датчики протечки и дыма сразу присылают уведомление на телефон.</li><li>Умные замки и камеры дают доступ гостям на заданное время.</li><li>Сценарий «Ухожу» выключает свет и приборы одним нажатием.</li></ul></div>
+<div class="vis"><svg viewBox="0 0 320 190" aria-label="Схема умного дома"><path d="M40 100L160 20L280 100V175H40Z" fill="var(--card)" stroke="var(--sig)" stroke-width="2"/><rect x="85" y="110" width="50" height="40" fill="var(--amb)" opacity=".7"/><rect x="185" y="110" width="50" height="40" fill="var(--grn)" opacity=".5"/>
+<g stroke="var(--sig)" fill="none" stroke-width="2"><path d="M130 5a40 40 0 0 1 60 0"><animate attributeName="opacity" values="0;1;0" dur="2s" repeatCount="indefinite"/></path><path d="M140 -4a60 60 0 0 1 40 0" opacity=".4"/></g></svg>
+<div class="kpi"><span>Экономия энергии</span><b>до 30%</b></div><div class="kpi"><span>Устройств в среднем доме</span><b>20+</b></div></div></div>
+
+<div class="panel" role="tabpanel">
+<div><h3>Завод, который предсказывает поломки</h3><p>Промышленный IoT (IIoT) подключает станки, конвейеры и склады. Данные вибрации, температуры и давления показывают износ раньше, чем оборудование остановится.</p>
+<ul><li>Предиктивное обслуживание заменяет ремонт по графику ремонтом по состоянию.</li><li>Цифровые двойники позволяют проверять изменения на модели, а не на линии.</li><li>Отслеживание грузов и запасов убирает потери на складе и в пути.</li><li>Контроль безопасности фиксирует газ, перегрев и нахождение людей в опасных зонах.</li></ul></div>
+<div class="vis"><svg viewBox="0 0 320 190" aria-label="Схема конвейера"><rect x="20" y="120" width="280" height="22" rx="11" fill="var(--card)" stroke="var(--sig)" stroke-width="2"/>
+<g fill="var(--amb)"><rect x="40" y="96" width="22" height="22"><animate attributeName="x" values="30;270" dur="6s" repeatCount="indefinite"/></rect><rect x="40" y="96" width="22" height="22"><animate attributeName="x" values="30;270" dur="6s" begin="-3s" repeatCount="indefinite"/></rect></g>
+<g stroke="var(--sig)" stroke-width="3" fill="none"><circle cx="160" cy="55" r="28"/><path d="M160 27v-10M160 83v10M132 55h-10M188 55h10"><animateTransform attributeName="transform" type="rotate" from="0 160 55" to="360 160 55" dur="8s" repeatCount="indefinite"/></path></g></svg>
+<div class="kpi"><span>Внеплановые простои</span><b>−30%</b></div><div class="kpi"><span>Затраты на обслуживание</span><b>−25%</b></div></div></div>
+</div></section>
+
+<section id="how"><div class="wrap">
+<h2 class="rv">Как данные превращаются в действие</h2>
+<p class="lead rv">Любая IoT-система проходит четыре шага. Это путь от измерения до решения.</p>
+<div class="flow rv" id="flow">
+<div class="step"><h3>Датчик</h3><p>Измеряет температуру, движение, давление, влажность или положение.</p></div>
+<div class="step"><h3>Связь</h3><p>Wi-Fi, Zigbee, LoRaWAN, NB-IoT или 5G передают данные на шлюз.</p></div>
+<div class="step"><h3>Облако</h3><p>Платформа хранит данные, ищет закономерности и запускает аналитику и ИИ.</p></div>
+<div class="step"><h3>Действие</h3><p>Система шлёт уведомление или сама включает насос, свет или тормоз линии.</p></div>
+</div></div></section>
+
+<section id="home" class="alt"><div class="wrap">
+<h2 class="rv">Попробуйте умный дом</h2>
+<p class="lead rv">Нажмите на устройство и посмотрите, как меняются дом и расход энергии.</p>
+<div class="home rv">
+<div class="devs" id="devs">
+<button class="dev" aria-pressed="false" data-w="60" data-g="g1"><span>Свет в гостиной<small>Яркий тёплый режим</small></span><i class="sw"></i></button>
+<button class="dev" aria-pressed="false" data-w="1200" data-g="g2"><span>Отопление<small>Поддерживает 22 °C</small></span><i class="sw"></i></button>
+<button class="dev" aria-pressed="false" data-w="15" data-g="g3"><span>Умный замок<small>Дверь закрыта и охраняется</small></span><i class="sw"></i></button>
+<button class="dev" aria-pressed="false" data-w="120" data-g="g4"><span>Камера и датчики<small>Следят за движением</small></span><i class="sw"></i></button>
+<div class="meter"><span>Текущая мощность</span><b id="w">0 Вт</b></div></div>
+<div class="vis"><svg id="house" viewBox="0 0 320 210" aria-label="Дом"><path d="M30 105L160 15L290 105V195H30Z" fill="var(--bg)" stroke="var(--sig)" stroke-width="2"/>
+<rect class="glow" id="g1" x="60" y="115" width="62" height="50" fill="var(--amb)" rx="4"/><rect x="60" y="115" width="62" height="50" fill="none" stroke="var(--line)" stroke-width="2"/>
+<g class="glow" id="g2"><path d="M165 150q8-12 0-24M185 150q8-12 0-24M205 150q8-12 0-24" stroke="#ff7a5c" stroke-width="3" fill="none"/></g>
+<rect x="240" y="135" width="26" height="60" fill="none" stroke="var(--line)" stroke-width="2"/><circle class="glow" id="g3" cx="260" cy="168" r="5" fill="var(--grn)"/>
+<g class="glow" id="g4"><circle cx="160" cy="70" r="10" fill="var(--sig)"/><circle cx="160" cy="70" r="22" fill="none" stroke="var(--sig)" stroke-width="2" opacity=".5"/></g></svg>
+<div class="kpi"><span>Активных устройств</span><b id="cnt">0 из 4</b></div></div>
+</div></div></section>
+
+<section id="risks"><div class="wrap">
+<h2 class="rv">Что нужно учесть</h2>
+<p class="lead rv">У IoT есть слабые места. Хорошие проекты закладывают защиту с первого дня.</p>
+<div class="grid">
+<div class="card rv"><span class="tag">Безопасность</span><h3>Уязвимые устройства</h3><p>Слабые пароли и забытые обновления превращают камеры и датчики в точки взлома. Меняйте заводские пароли и ставьте обновления.</p></div>
+<div class="card rv"><span class="tag">Приватность</span><h3>Личные данные</h3><p>Умный дом знает, когда вы дома. Выбирайте сервисы с понятной политикой хранения и шифрованием.</p></div>
+<div class="card rv"><span class="tag">Совместимость</span><h3>Единые стандарты</h3><p>Производители используют разные протоколы. Стандарт Matter помогает устройствам разных брендов работать вместе.</p></div>
+<div class="card rv"><span class="tag">Масштаб</span><h3>Поток данных</h3><p>Миллионы датчиков создают огромные объёмы. Пограничные вычисления обрабатывают их рядом с источником и разгружают сеть.</p></div>
+</div></div></section>
+
+<section id="quiz" class="alt"><div class="wrap">
+<h2 class="rv">Проверьте себя</h2>
+<p class="lead rv">Сначала изучите разделы выше. Затем введите имя и группу, выберите тест и ответьте на 4 вопроса. В конце вы увидите результат.</p>
+<div class="qz rv" id="qz" aria-live="polite"></div>
+</div></section>
+
+<footer><div class="wrap"><span>IoT Мир · учебная страница об интернете вещей</span><span>Умные города, дома и промышленность</span></div></footer>
+
+<script>
+(function(){
+var rm=matchMedia('(prefers-reduced-motion:reduce)').matches;
+/* network hero */
+var c=document.getElementById('net'),x=c.getContext('2d'),W,H,N=[],P=[];
+function size(){var d=devicePixelRatio||1;W=c.clientWidth;H=c.clientHeight;c.width=W*d;c.height=H*d;x.setTransform(d,0,0,d,0,0);
+var n=Math.min(70,Math.floor(W*H/16000));N=[];for(var i=0;i<n;i++)N.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,hub:i%9==0})}
+function col(n){return getComputedStyle(document.documentElement).getPropertyValue(n).trim()||'#2de2e6'}
+var cs,ca;
+function draw(){cs=col('--sig');ca=col('--amb');x.clearRect(0,0,W,H);
+for(var i=0;i<N.length;i++){var a=N[i];if(!rm){a.x+=a.vx;a.y+=a.vy;if(a.x<0||a.x>W)a.vx*=-1;if(a.y<0||a.y>H)a.vy*=-1}
+for(var j=i+1;j<N.length;j++){var b=N[j],dx=a.x-b.x,dy=a.y-b.y,d=Math.sqrt(dx*dx+dy*dy);
+if(d<150){x.globalAlpha=(1-d/150)*.35;x.strokeStyle=cs;x.beginPath();x.moveTo(a.x,a.y);x.lineTo(b.x,b.y);x.stroke();
+if(!rm&&Math.random()<.0004&&P.length<14)P.push({a:a,b:b,t:0})}}
+x.globalAlpha=a.hub?.9:.55;x.fillStyle=a.hub?ca:cs;x.beginPath();x.arc(a.x,a.y,a.hub?4:2.4,0,6.3);x.fill()}
+x.globalAlpha=1;x.fillStyle=ca;
+for(var k=P.length-1;k>=0;k--){var p=P[k];p.t+=.02;if(p.t>=1){P.splice(k,1);continue}
+x.beginPath();x.arc(p.a.x+(p.b.x-p.a.x)*p.t,p.a.y+(p.b.y-p.a.y)*p.t,3,0,6.3);x.fill()}
+requestAnimationFrame(draw)}
+size();addEventListener('resize',size);draw();
+/* reveal + counters + flow */
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(!e.isIntersecting)return;var t=e.target;t.classList.add('in');
+t.querySelectorAll('[data-n]').forEach(count);if(t.id=='flow')steps();io.unobserve(t)})},{threshold:.2});
+document.querySelectorAll('.rv').forEach(function(el){io.observe(el)});
+function count(el){var n=+el.dataset.n,s=el.dataset.s||'',t0=null;if(rm){el.textContent=n+s;return}
+(function f(t){if(!t0)t0=t;var p=Math.min((t-t0)/1600,1);el.textContent=Math.round(n*(1-Math.pow(1-p,3)))+s;if(p<1)requestAnimationFrame(f)})(performance.now())}
+function steps(){document.querySelectorAll('#flow .step').forEach(function(s,i){setTimeout(function(){s.classList.add('on')},rm?0:i*600)})}
+/* tabs */
+var tabs=document.querySelectorAll('.tab'),ps=document.querySelectorAll('.panel');
+tabs.forEach(function(b){b.onclick=function(){tabs.forEach(function(t){t.setAttribute('aria-selected',t==b)});ps.forEach(function(p,i){p.classList.toggle('on',i==b.dataset.t)})}});
+/* smart home */
+var devs=document.querySelectorAll('.dev');
+devs.forEach(function(d){d.onclick=function(){var on=d.getAttribute('aria-pressed')!='true';d.setAttribute('aria-pressed',on);
+document.getElementById(d.dataset.g).classList.toggle('on',on);
+var w=0,n=0;devs.forEach(function(e){if(e.getAttribute('aria-pressed')=='true'){w+=+e.dataset.w;n++}});
+document.getElementById('w').textContent=w+' Вт';document.getElementById('cnt').textContent=n+' из 4'}});
+})();
+</script>
+<script>
+(function(){
+var T=[
+{n:'Основы IoT',e:'📡',q:[
+['Что означает IoT?','Internet of Things','Input of Tools','Internal Online Terminal','Intelligent Optical Transfer'],
+['Какой путь данных верный?','Датчик, связь, облако, действие','Облако, датчик, действие, связь','Действие, связь, датчик, облако','Связь, действие, облако, датчик'],
+['Какая технология подходит для маломощных датчиков на больших расстояниях?','LoRaWAN','HDMI','VGA','Принтерный кабель'],
+['Что такое пограничные (edge) вычисления?','Обработка данных рядом с источником','Хранение всех данных только в облаке','Печать данных на бумаге','Отключение датчиков ночью']]},
+{n:'Умные города',e:'🏙️',q:[
+['Что делают адаптивные светофоры?','Меняют сигналы по потоку машин','Горят только красным','Работают по одному расписанию','Выключаются днём'],
+['Чем помогают датчики утечек на водопроводе?','Находят аварию до прорыва трубы','Делают воду вкуснее','Увеличивают давление','Заменяют трубы'],
+['Почему умное освещение экономит энергию?','Включается по движению и времени суток','Светит вдвое слабее всегда','Горит только днём','Работает без электричества'],
+['Что измеряют датчики качества воздуха?','Содержание пыли и газов','Скорость автобусов','Уровень воды в реке','Число жителей']]},
+{n:'Умный дом',e:'🏠',q:[
+['Что делает единый хаб в умном доме?','Объединяет устройства и запускает сценарии','Только измеряет температуру','Заменяет роутер навсегда','Хранит ключи от квартиры'],
+['Зачем нужен стандарт Matter?','Чтобы устройства разных брендов работали вместе','Чтобы убрать Wi-Fi','Чтобы повысить цену устройств','Чтобы заменить электричество'],
+['Что делает сценарий «Ухожу»?','Выключает свет и приборы одним нажатием','Включает всё освещение','Отключает интернет','Вызывает такси'],
+['Что нужно сделать после покупки умной камеры?','Сменить заводской пароль','Никогда не обновлять','Выложить пароль в сеть','Отключить защиту']]},
+{n:'Промышленный IoT',e:'🏭',q:[
+['Что такое IIoT?','Промышленный интернет вещей','Игровой интернет','Интернет-магазин','Школьная сеть'],
+['В чём суть предиктивного обслуживания?','Ремонт по состоянию оборудования','Ремонт только после поломки','Ремонт раз в год всегда','Замена всех станков'],
+['Что такое цифровой двойник?','Виртуальная модель реального оборудования','Копия сотрудника','Второй завод','Фотография станка'],
+['Какие данные показывают износ станка?','Вибрация и температура','Цвет краски','Имя оператора','Время обеда']]}];
+var Q=document.getElementById('qz'),user={},ti,qi,sc;
+function sh(a){return a.map(function(v){return[Math.random(),v]}).sort(function(x,y){return x[0]-y[0]}).map(function(p){return p[1]})}
+function put(h){Q.innerHTML='<div>'+h+'</div>'}
+function start(){
+put('<h3>Кто проходит тест?</h3><div class="fld"><input id="nm" placeholder="Ваше имя и фамилия" autocomplete="name" maxlength="40"><input id="gr" placeholder="Ваша группа" maxlength="20"></div><p class="err" id="er"></p><h3 style="font-size:18px">Выберите тест</h3><div class="tests">'+T.map(function(t,i){return'<button class="tst" data-i="'+i+'"><em>'+t.e+'</em>'+t.n+'</button>'}).join('')+'</div>');
+Q.querySelectorAll('.tst').forEach(function(b){b.onclick=function(){
+var n=document.getElementById('nm').value.trim(),g=document.getElementById('gr').value.trim();
+if(!n||!g){document.getElementById('er').textContent='Введите имя и группу, чтобы начать тест.';return}
+user={n:n,g:g};ti=+b.dataset.i;qi=0;sc=0;ask()}});
+if(user.n){document.getElementById('nm').value=user.n;document.getElementById('gr').value=user.g}}
+function ask(){
+var t=T[ti],q=t.q[qi],o=sh(q.slice(1));
+put('<div class="bar"><i style="width:'+(qi/t.q.length*100)+'%"></i></div><p style="color:var(--mute);margin:0 0 6px">'+t.e+' '+t.n+' · вопрос '+(qi+1)+' из '+t.q.length+'</p><h3>'+q[0]+'</h3>'+o.map(function(v){return'<button class="opt">'+v+'</button>'}).join('')+'<div class="row" style="justify-content:flex-end"><button class="btn p" id="nx" style="display:none">'+(qi==t.q.length-1?'Показать результат':'Дальше')+'</button></div>');
+var bs=Q.querySelectorAll('.opt');
+bs.forEach(function(b){b.onclick=function(){
+bs.forEach(function(x){x.disabled=true;if(x.textContent==q[1])x.classList.add('ok')});
+if(b.textContent==q[1])sc++;else b.classList.add('bad');
+var nx=document.getElementById('nx');nx.style.display='';nx.focus();
+nx.onclick=function(){qi++;if(qi<t.q.length)ask();else done()}}})}
+function done(){
+var t=T[ti],n=t.q.length,v=sc==n?['🏆','Отлично! Вы настоящий эксперт.']:sc==n-1?['🎉','Хорошо! Почти без ошибок.']:sc>=n/2?['🙂','Неплохо. Повторите материал и попробуйте снова.']:['📚','Стоит перечитать разделы выше и пройти тест ещё раз.'];
+put('<div class="res"><div class="big">'+v[0]+'</div><p class="who" id="wn"></p><p class="grp" id="wg"></p><div class="ring"><svg viewBox="0 0 120 120" width="150" height="150"><circle class="t" cx="60" cy="60" r="54"/><circle class="v" id="rv" cx="60" cy="60" r="54"/></svg><b id="rs">0/'+n+'</b></div><p style="margin:0;color:var(--mute)">'+t.n+'. '+v[1]+'</p><div class="row"><button class="btn p" id="again">Другой тест</button><button class="btn" id="cp">Скопировать результат</button></div></div>');
+document.getElementById('wn').textContent=user.n;document.getElementById('wg').textContent='Группа: '+user.g;
+setTimeout(function(){document.getElementById('rv').style.strokeDashoffset=339.3*(1-sc/n);
+var k=0,s=document.getElementById('rs');var iv=setInterval(function(){s.textContent=Math.min(k,sc)+'/'+n;if(k++>=sc)clearInterval(iv)},sc?1400/sc:1)},50);
+if(!matchMedia('(prefers-reduced-motion:reduce)').matches&&sc>=n/2){var E=sc==n?['🎉','✨','🏆','🔥','👏','🚀']:['🎉','✨','👍','😊'];
+for(var i=0;i<16;i++){var f=document.createElement('span');f.className='fl';f.textContent=E[i%E.length];f.style.left=Math.random()*92+'%';f.style.animationDelay=Math.random()*1.2+'s';Q.appendChild(f)}}
+document.getElementById('again').onclick=start;
+document.getElementById('cp').onclick=function(){var b=this,txt=user.n+', группа '+user.g+'. Тест «'+t.n+'»: '+sc+' из '+n+'.';
+try{navigator.clipboard.writeText(txt).then(function(){b.textContent='Скопировано ✓'})}catch(e){b.textContent=txt}}}
+start();
+})();
+</script>
+</body>
+</html>
